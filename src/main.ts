@@ -1,5 +1,6 @@
 import { Actor } from 'apify';
 import { PlaywrightCrawler } from 'crawlee';
+import { convertPlaywrightRequestToCurl } from './tools.js';
 
 // Initialize the Apify SDK
 await Actor.init();
@@ -16,10 +17,12 @@ interface InputSchema {
     proxyConfiguration?: ProxyConfigurationInput;
     cookies?: string[];
     saveHeaders?: boolean;
+    saveCurl?: boolean;
 }
 
 interface ActorState {
     cookies: Record<string, {
+        requestIndex: number,
         requestUrl: string,
         url: string,
         method: string,
@@ -37,6 +40,7 @@ const {
     proxyConfiguration: proxyConfigurationOptions,
     cookies: cookiesToSave,
     saveHeaders,
+    saveCurl,
 } = await Actor.getInput<InputSchema>() ?? {};
 
 if (!urls) {
@@ -87,7 +91,9 @@ const crawler = new PlaywrightCrawler({
 
                     log.info(`Saving cookie ${key} set by ${response.url()}`);
 
+                    const requestIndex = output.cookies[key].length;
                     output.cookies[key].push({
+                        requestIndex,
                         requestUrl: request.url,
                         url: response.url(),
                         method: interceptedRequest.method(),
@@ -95,6 +101,11 @@ const crawler = new PlaywrightCrawler({
                         headers: saveHeaders ? interceptedRequest.headers() : undefined,
                         value,
                     });
+
+                    if (saveCurl) {
+                        const curl = await convertPlaywrightRequestToCurl(interceptedRequest);
+                        await Actor.setValue(`curl-${key}-${requestIndex}.sh`, curl, { contentType: 'text/plain' });
+                    }
                 }
             });
         },

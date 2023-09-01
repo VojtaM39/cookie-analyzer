@@ -18,7 +18,7 @@ interface InputSchema {
 }
 
 interface ActorState {
-    cookies: Record<string, { url: string, value: string }[]>;
+    cookies: Record<string, { requestUrl: string, url: string, value: string }[]>;
 }
 
 const store = await Actor.openKeyValueStore();
@@ -45,7 +45,7 @@ const crawler = new PlaywrightCrawler({
     persistCookiesPerSession: false,
     headless: true,
     preNavigationHooks: [
-        async ({ page, log }) => {
+        async ({ page, log, request }) => {
             page.on('response', async (response) => {
                 const headers = await response.allHeaders();
                 const setCookieHeader = headers['set-cookie'];
@@ -75,7 +75,11 @@ const crawler = new PlaywrightCrawler({
                     }
 
                     log.info(`Saving cookie ${key}=${value} set by ${response.url()}`);
-                    output.cookies[key].push({ url: response.url(), value });
+                    output.cookies[key].push({ 
+                        requestUrl: request.url,
+                        url: response.url(),
+                        value,
+                    });
                 }
             });
         },

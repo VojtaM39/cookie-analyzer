@@ -74,8 +74,8 @@ const crawler = new PlaywrightCrawler({
                         output.cookies[key] = [];
                     }
 
-                    log.info(`Saving cookie ${key}=${value} set by ${response.url()}`);
-                    output.cookies[key].push({ 
+                    log.info(`Saving cookie ${key} set by ${response.url()}`);
+                    output.cookies[key].push({
                         requestUrl: request.url,
                         url: response.url(),
                         value,

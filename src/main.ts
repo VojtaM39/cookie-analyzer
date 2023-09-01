@@ -30,8 +30,13 @@ const {
     cookies: cookiesToSave,
 } = await Actor.getInput<InputSchema>() ?? {};
 
-if (!urls) throw new Error('No URLs provided!');
-if (!cookiesToSave) throw new Error('No cookies provided!');
+if (!urls) {
+    throw new Error('No URLs provided!');
+}
+
+if (!cookiesToSave) {
+    throw new Error('No cookies provided!');
+}
 
 const proxyConfiguration = await Actor.createProxyConfiguration(proxyConfigurationOptions);
 

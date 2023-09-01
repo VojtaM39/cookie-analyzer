@@ -27,6 +27,13 @@
                 "useApifyProxy": true
             },
             "sectionCaption": "Proxy configuration"
-        }
+        },
+        "headers": {
+            "title": "Save headers",
+            "type": "boolean",
+            "description": "",
+            "default": false,
+            "nullable": false
+        },
     }
 }

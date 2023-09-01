@@ -15,14 +15,16 @@ interface InputSchema {
     urls?: string[];
     proxyConfiguration?: ProxyConfigurationInput;
     cookies?: string[];
+    saveHeaders?: boolean;
 }
 
 interface ActorState {
-    cookies: Record<string, { 
-        requestUrl: string, 
+    cookies: Record<string, {
+        requestUrl: string,
         url: string,
         method: string,
         body?: string,
+        headers?: Record<string, string>,
         value: string,
     }[]>;
 }
@@ -34,6 +36,7 @@ const {
     urls,
     proxyConfiguration: proxyConfigurationOptions,
     cookies: cookiesToSave,
+    saveHeaders,
 } = await Actor.getInput<InputSchema>() ?? {};
 
 if (!urls) {
@@ -89,6 +92,7 @@ const crawler = new PlaywrightCrawler({
                         url: response.url(),
                         method: interceptedRequest.method(),
                         body: interceptedRequest.postData() ?? undefined,
+                        headers: saveHeaders ? interceptedRequest.headers() : undefined,
                         value,
                     });
                 }

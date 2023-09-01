@@ -1,0 +1,32 @@
+{
+    "title": "PlaywrightCrawler Template",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "cookies": {
+            "title": "Cookies",
+            "type": "array",
+            "description": "",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "URLs",
+            "type": "array",
+            "description": "",
+            "editor": "stringList"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true
+            },
+            "prefill": {
+                "useApifyProxy": true
+            },
+            "sectionCaption": "Proxy configuration"
+        }
+    }
+}

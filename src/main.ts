@@ -18,8 +18,8 @@ interface InputSchema {
 }
 
 interface ActorState {
-    cookies: Record<string, { 
-        requestUrl: string, 
+    cookies: Record<string, {
+        requestUrl: string,
         url: string,
         method: string,
         body?: string,
